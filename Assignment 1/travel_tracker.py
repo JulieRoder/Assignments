@@ -14,6 +14,9 @@ def main():
     print("Travel Tracker 1.0 - by Julie-Anne Roder")
     places = get_places_data()
     print("{} places loaded from places.csv".format(len(places)))
+    print(MENU)
+    menu_options = ["L", "A", "M", "Q"]
+    menu_choice = get_valid_menu_choice(menu_options)
 
 
 def get_places_data():
@@ -27,6 +30,15 @@ def get_places_data():
         list_of_parts.append(parts)
     input_file.close()
     return list_of_parts
+
+
+def get_valid_menu_choice(menu):
+    """Get a valid menu choice"""
+    choice = input(">>> ").upper()
+    while choice not in menu:
+        print("Invalid option")
+        choice = input(">>> ").upper()
+    return choice
 
 
 if __name__ == '__main__':
