@@ -17,6 +17,13 @@ def main():
     print(MENU)
     menu_options = ["L", "A", "M", "Q"]
     menu_choice = get_valid_menu_choice(menu_options)
+    while menu_choice != "Q":
+        if menu_choice == "L":
+            pass
+        elif menu_choice == "A":
+            pass
+        else:
+            pass
 
 
 def get_places_data():
