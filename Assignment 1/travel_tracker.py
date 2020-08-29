@@ -42,7 +42,7 @@ def main():
                 mark_place_as_visited(places)
                 places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
         menu_choice = get_valid_menu_choice(menu_options, "{}\n>>> ".format(MENU))
-
+    save_to_csv_file(places)
     print("{} places saved to places.csv\nHave a nice day :)".format(len(places)))
 
 
@@ -161,8 +161,8 @@ def mark_place_as_visited(places):
 def save_to_csv_file(places):
     out_file = open(FILENAME, 'w')
     for place in places:
-        print("{}, {}, {}, {}".format(place[PLACE_NAME_INDEX], place[COUNTRY_INDEX], place[PRIORITY_INDEX],
-                                      place[VISITED_INDEX]), file=out_file)
+        print("{},{},{},{}".format(place[PLACE_NAME_INDEX], place[COUNTRY_INDEX], place[PRIORITY_INDEX],
+                                   place[VISITED_INDEX]), file=out_file)
     out_file.close()
 
 
