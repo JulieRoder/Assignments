@@ -42,7 +42,8 @@ def main():
                 print("No unvisited places")
             else:
                 display_places_list(places)
-
+                print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
+                mark_place_as_visited(places)
                 places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
         print(MENU)
         menu_choice = get_valid_menu_choice(menu_options)
@@ -112,23 +113,28 @@ def get_valid_number(prompt):
                 print("number must be > 0")
             else:
                 finished = True
-        except ValueError:  # if user enters letter instead of number.
+        except ValueError:
             print("Invalid input; enter a valid number")
     return number
 
 
 def collect_place_details():
     """Collect the place details."""
-    place_details = []
     place_name = get_valid_string("Name: ")
-    place_details.append(place_name)
     country_name = get_valid_string("Country: ")
-    place_details.append(country_name)
     priority_value = get_valid_number("Priority: ")
-    place_details.append(priority_value)
-    place_details.append("n")
+    place_details = [place_name, country_name, priority_value, UNVISITED_MARKER]
     print("{} in {} (priority {}) added to Travel Tracker".format(place_name, country_name, priority_value))
     return place_details
+
+
+def mark_place_as_visited(places):
+    place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
+    while place_visited > len(places):
+        print("Invalid place number")
+        place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
+    else:
+        places[place_visited - 1][VISITED_INDEX] = VISITED_MARKER
 
 
 if __name__ == '__main__':
