@@ -40,6 +40,7 @@ def get_places_data():
         line = line.strip()  # Remove the \n
         parts = line.split(',')  # Separate the data into its parts
         parts[2] = int(parts[2])  # Make the number an integer
+        parts.reverse()
         list_of_parts.append(parts)
     input_file.close()
     return list_of_parts
@@ -57,17 +58,17 @@ def get_valid_menu_choice(menu):
 def display_places_list(places):
     """Display list of places."""
     index = 0
-    longest_place_name = get_longest_name(places, 0)
-    longest_country_name = get_longest_name(places, 1)
+    longest_place_name = get_longest_name(places, 3)
+    longest_country_name = get_longest_name(places, 2)
     places.sort()
     for place in places:
         index += 1
-        if place[3] == "n":
-            print("*{}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[0], longest_place_name, place[1],
-                                                                 longest_country_name, place[2], PRIORITY_LENGTH))
+        if place[0] == "n":
+            print("*{}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[3], longest_place_name, place[2],
+                                                                 longest_country_name, place[1], PRIORITY_LENGTH))
         else:
-            print(" {}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[0], longest_place_name, place[1],
-                                                                 longest_country_name, place[2], PRIORITY_LENGTH))
+            print(" {}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[3], longest_place_name, place[2],
+                                                                 longest_country_name, place[1], PRIORITY_LENGTH))
 
 
 def get_longest_name(list_file, index):
@@ -80,10 +81,10 @@ def get_longest_name(list_file, index):
 
 
 def get_valid_string(prompt):
-    string = input(prompt.title())
+    string = input(prompt).title()
     while string == "":
         print("Input can not be blank")
-        string = input(prompt.title())
+        string = input(prompt).title()
     return string
 
 
@@ -104,6 +105,7 @@ def collect_place_details():
     priority_value = get_valid_number("Priority: ")
     place_details.append(priority_value)
     place_details.append("n")
+    place_details.reverse()
     return place_details
 
 
