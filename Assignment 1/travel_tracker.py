@@ -4,6 +4,7 @@ Name: Julie-Anne Roder
 Date started:29/08/2020
 GitHub URL: https://github.com/JulieRoder/Assignments/tree/master/Assignment%201
 """
+from operator import itemgetter
 FILENAME = "places.csv"
 MENU = "Menu:\nL - List places\nA - Add new place\nM - Mark a place as visited\nQ - Quit"
 SENTINEL = 1
@@ -17,6 +18,7 @@ PRIORITY_LENGTH = 3
 def main():
     print("Travel Tracker 1.0 - by Julie-Anne Roder")
     places = get_places_data()
+    places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
     print("{} places loaded from places.csv".format(len(places)))
     print(MENU)
     menu_options = ["L", "A", "M", "Q"]
@@ -27,8 +29,11 @@ def main():
         elif menu_choice == "A":
             place_details = collect_place_details()
             places.append(place_details)
+            places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
         else:
             display_places_list(places)
+
+            places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
             pass
         print(MENU)
         menu_choice = get_valid_menu_choice(menu_options)
@@ -61,7 +66,6 @@ def display_places_list(places):
     index = 0
     longest_place_name = get_longest_name(places, PLACE_NAME_INDEX)
     longest_country_name = get_longest_name(places, COUNTRY_INDEX)
-    places.sort()
     for place in places:
         index += 1
         visit_marker = "*" if place[VISITED_INDEX] == "n" else " "
