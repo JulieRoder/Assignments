@@ -81,6 +81,7 @@ def get_longest_name(list_file, index):
 
 
 def get_valid_string(prompt):
+    """Get a valid string."""
     string = input(prompt).title()
     while string == "":
         print("Input can not be blank")
@@ -89,14 +90,19 @@ def get_valid_string(prompt):
 
 
 def get_valid_number(prompt):
-    number = int(input(prompt))
-    while number < SENTINEL:
-        print("number must be > 0")
+    """Get a valid number."""
+    try:
         number = int(input(prompt))
-    return number
+        while number < SENTINEL:
+            print("number must be > 0")
+            number = int(input(prompt))
+            return number
+    except ValueError:
+        print("Invalid input; enter a valid number")
 
 
 def collect_place_details():
+    """Collect the place details."""
     place_details = []
     place_name = get_valid_string("Name: ")
     place_details.append(place_name)
