@@ -19,6 +19,7 @@ VISITED_MARKER = "v"
 
 
 def main():
+    """Track the travel plans of the user."""
     print("Travel Tracker 1.0 - by Julie-Anne Roder")
     places = get_places_data()
     places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
@@ -34,15 +35,11 @@ def main():
             places.append(place_details)
             places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
         else:
-            visited_count = STARTING_VALUE
-            for place in places:
-                if place[VISITED_INDEX] == VISITED_MARKER:
-                    visited_count += 1
+            visited_count = count_visited_places(places)
             if visited_count == len(places):
                 print("No unvisited places")
             else:
                 display_places_list(places)
-                print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
                 mark_place_as_visited(places)
                 places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
         print(MENU)
@@ -76,6 +73,7 @@ def display_places_list(places):
     index = STARTING_VALUE
     longest_place_name = get_longest_name(places, PLACE_NAME_INDEX)
     longest_country_name = get_longest_name(places, COUNTRY_INDEX)
+    visited_count = count_visited_places(places)
     for place in places:
         index += 1
         unvisited_marker = "*" if place[VISITED_INDEX] == UNVISITED_MARKER else " "
@@ -83,6 +81,7 @@ def display_places_list(places):
                                                               longest_place_name, place[COUNTRY_INDEX],
                                                               longest_country_name, place[PRIORITY_INDEX],
                                                               PRIORITY_LENGTH))
+        print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
 
 
 def get_longest_name(list_file, index):
@@ -92,6 +91,15 @@ def get_longest_name(list_file, index):
         if len(parts[index]) > longest_name:
             longest_name = len(parts[index])
     return longest_name
+
+
+def count_visited_places(places):
+    """Count the number of places visited."""
+    visited_count = STARTING_VALUE
+    for place in places:
+        if place[VISITED_INDEX] == VISITED_MARKER:
+            visited_count += 1
+    return visited_count
 
 
 def get_valid_string(prompt):
@@ -129,12 +137,17 @@ def collect_place_details():
 
 
 def mark_place_as_visited(places):
+    """Mark a place as visited."""
     place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
     while place_visited > len(places):
         print("Invalid place number")
         place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
+    if places[place_visited - 1][VISITED_INDEX] == VISITED_MARKER:
+        print("That place is already visited")
     else:
         places[place_visited - 1][VISITED_INDEX] = VISITED_MARKER
+        print("{} in {} visited".format(places[place_visited - 1][PLACE_NAME_INDEX],
+                                        places[place_visited - 1][COUNTRY_INDEX]))
 
 
 if __name__ == '__main__':
