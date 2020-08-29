@@ -4,12 +4,14 @@ Name: Julie-Anne Roder
 Date started:29/08/2020
 GitHub URL: https://github.com/JulieRoder/Assignments/tree/master/Assignment%201
 """
-SENTINEL = 1
-HIGH_PRIORITY = 1
-LOW_PRIORITY = 12
-PRIORITY_LENGTH = 3
-MENU = "Menu:\nL - List places\nA - Add new place\nM - Mark a place as visited\nQ - Quit"
 FILENAME = "places.csv"
+MENU = "Menu:\nL - List places\nA - Add new place\nM - Mark a place as visited\nQ - Quit"
+SENTINEL = 1
+VISITED_INDEX = 3
+PRIORITY_INDEX = 2
+COUNTRY_INDEX = 1
+PLACE_NAME_INDEX = 0
+PRIORITY_LENGTH = 3
 
 
 def main():
@@ -37,10 +39,9 @@ def get_places_data():
     list_of_parts = []
     input_file = open(FILENAME)
     for line in input_file:
-        line = line.strip()  # Remove the \n
-        parts = line.split(',')  # Separate the data into its parts
-        parts[2] = int(parts[2])  # Make the number an integer
-        parts.reverse()
+        line = line.strip()
+        parts = line.split(',')
+        parts[PRIORITY_INDEX] = int(parts[PRIORITY_INDEX])
         list_of_parts.append(parts)
     input_file.close()
     return list_of_parts
@@ -58,17 +59,16 @@ def get_valid_menu_choice(menu):
 def display_places_list(places):
     """Display list of places."""
     index = 0
-    longest_place_name = get_longest_name(places, 3)
-    longest_country_name = get_longest_name(places, 2)
+    longest_place_name = get_longest_name(places, PLACE_NAME_INDEX)
+    longest_country_name = get_longest_name(places, COUNTRY_INDEX)
     places.sort()
     for place in places:
         index += 1
-        if place[0] == "n":
-            print("*{}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[3], longest_place_name, place[2],
-                                                                 longest_country_name, place[1], PRIORITY_LENGTH))
-        else:
-            print(" {}. {:<{}} in {:<{}} priority {:>{}}".format(index, place[3], longest_place_name, place[2],
-                                                                 longest_country_name, place[1], PRIORITY_LENGTH))
+        visit_marker = "*" if place[VISITED_INDEX] == "n" else " "
+        print("{}{}. {:<{}} in {:<{}} priority {:>{}}".format(visit_marker, index, place[PLACE_NAME_INDEX],
+                                                              longest_place_name, place[COUNTRY_INDEX],
+                                                              longest_country_name, place[PRIORITY_INDEX],
+                                                              PRIORITY_LENGTH))
 
 
 def get_longest_name(list_file, index):
@@ -91,14 +91,17 @@ def get_valid_string(prompt):
 
 def get_valid_number(prompt):
     """Get a valid number."""
-    try:
-        number = int(input(prompt))
-        while number < SENTINEL:
-            print("number must be > 0")
+    finished = False
+    while not finished:
+        try:
             number = int(input(prompt))
-            return number
-    except ValueError:
-        print("Invalid input; enter a valid number")
+            if number < SENTINEL:
+                print("number must be > 0")
+            else:
+                finished = True
+        except ValueError:  # if user enters letter instead of number.
+            print("Invalid input; enter a valid number")
+    return number
 
 
 def collect_place_details():
@@ -111,7 +114,6 @@ def collect_place_details():
     priority_value = get_valid_number("Priority: ")
     place_details.append(priority_value)
     place_details.append("n")
-    place_details.reverse()
     return place_details
 
 
