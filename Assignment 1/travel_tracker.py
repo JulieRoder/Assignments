@@ -24,9 +24,8 @@ def main():
     places = get_places_data()
     places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
     print("{} places loaded from places.csv".format(len(places)))
-    print(MENU)
     menu_options = ["L", "A", "M", "Q"]
-    menu_choice = get_valid_menu_choice(menu_options)
+    menu_choice = get_valid_menu_choice(menu_options, "{}\n>>> ".format(MENU))
     while menu_choice != "Q":
         if menu_choice == "L":
             display_places_list(places)
@@ -42,8 +41,9 @@ def main():
                 display_places_list(places)
                 mark_place_as_visited(places)
                 places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
-        print(MENU)
-        menu_choice = get_valid_menu_choice(menu_options)
+        menu_choice = get_valid_menu_choice(menu_options, "{}\n>>> ".format(MENU))
+
+    print("{} places saved to places.csv\nHave a nice day :)".format(len(places)))
 
 
 def get_places_data():
@@ -59,9 +59,9 @@ def get_places_data():
     return list_of_parts
 
 
-def get_valid_menu_choice(menu):
+def get_valid_menu_choice(menu, prompt):
     """Get a valid menu choice."""
-    choice = input(">>> ").upper()
+    choice = input(prompt).upper()
     while choice not in menu:
         print("Invalid menu choice")
         choice = input(">>> ").upper()
@@ -81,7 +81,7 @@ def display_places_list(places):
                                                               longest_place_name, place[COUNTRY_INDEX],
                                                               longest_country_name, place[PRIORITY_INDEX],
                                                               PRIORITY_LENGTH))
-        print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
+    print_display_ending(places, visited_count)
 
 
 def get_longest_name(list_file, index):
@@ -102,6 +102,13 @@ def count_visited_places(places):
     return visited_count
 
 
+def print_display_ending(places, visited_count):
+    if visited_count < len(places):
+        print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
+    else:
+        print("{} places. No places left to visit. Why not add a new place?".format(len(places)))
+
+
 def get_valid_string(prompt):
     """Get a valid string."""
     string = input(prompt).title()
@@ -118,7 +125,7 @@ def get_valid_number(prompt):
         try:
             number = int(input(prompt))
             if number < SENTINEL:
-                print("number must be > 0")
+                print("Number must be > 0")
             else:
                 finished = True
         except ValueError:
@@ -138,16 +145,25 @@ def collect_place_details():
 
 def mark_place_as_visited(places):
     """Mark a place as visited."""
-    place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
+    print("Enter the number of a place to mark as visited")
+    place_visited = get_valid_number(">>> ")
     while place_visited > len(places):
         print("Invalid place number")
-        place_visited = get_valid_number("Enter the number of a place to mark as visited\n>>> ")
+        place_visited = get_valid_number(">>> ")
     if places[place_visited - 1][VISITED_INDEX] == VISITED_MARKER:
         print("That place is already visited")
     else:
         places[place_visited - 1][VISITED_INDEX] = VISITED_MARKER
-        print("{} in {} visited".format(places[place_visited - 1][PLACE_NAME_INDEX],
-                                        places[place_visited - 1][COUNTRY_INDEX]))
+        print("{} in {} visited!".format(places[place_visited - 1][PLACE_NAME_INDEX],
+                                         places[place_visited - 1][COUNTRY_INDEX]))
+
+
+def save_to_csv_file(places):
+    out_file = open(FILENAME, 'w')
+    for place in places:
+        print("{}, {}, {}, {}".format(place[PLACE_NAME_INDEX], place[COUNTRY_INDEX], place[PRIORITY_INDEX],
+                                      place[VISITED_INDEX]), file=out_file)
+    out_file.close()
 
 
 if __name__ == '__main__':
