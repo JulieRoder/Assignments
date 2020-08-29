@@ -4,6 +4,7 @@ Name: Julie-Anne Roder
 Date started:29/08/2020
 GitHub URL: https://github.com/JulieRoder/Assignments/tree/master/Assignment%201
 """
+SENTINEL = 1
 HIGH_PRIORITY = 1
 LOW_PRIORITY = 12
 PRIORITY_LENGTH = 3
@@ -22,8 +23,10 @@ def main():
         if menu_choice == "L":
             display_places_list(places)
         elif menu_choice == "A":
-            pass
+            place_details = collect_place_details()
+            places.append(place_details)
         else:
+            display_places_list(places)
             pass
         print(MENU)
         menu_choice = get_valid_menu_choice(menu_options)
@@ -74,6 +77,34 @@ def get_longest_name(list_file, index):
         if len(parts[index]) > longest_name:
             longest_name = len(parts[index])
     return longest_name
+
+
+def get_valid_string(prompt):
+    string = input(prompt.title())
+    while string == "":
+        print("Input can not be blank")
+        string = input(prompt.title())
+    return string
+
+
+def get_valid_number(prompt):
+    number = int(input(prompt))
+    while number < SENTINEL:
+        print("number must be > 0")
+        number = int(input(prompt))
+    return number
+
+
+def collect_place_details():
+    place_details = []
+    place_name = get_valid_string("Name: ")
+    place_details.append(place_name)
+    country_name = get_valid_string("Country: ")
+    place_details.append(country_name)
+    priority_value = get_valid_number("Priority: ")
+    place_details.append(priority_value)
+    place_details.append("n")
+    return place_details
 
 
 if __name__ == '__main__':
