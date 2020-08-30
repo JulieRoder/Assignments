@@ -1,7 +1,7 @@
 """
 CP1404 Assignment 1 - Travel Tracker 1.0
 Name: Julie-Anne Roder
-Date started:29/08/2020
+Date started:28/08/2020
 GitHub URL: https://github.com/JulieRoder/Assignments/tree/master/Assignment%201
 """
 from operator import itemgetter
@@ -22,7 +22,7 @@ def main():
     """Track the travel plans of the user."""
     print("Travel Tracker 1.0 - by Julie-Anne Roder")
     places = get_places_data()
-    places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))
+    places.sort(key=itemgetter(VISITED_INDEX, PRIORITY_INDEX))  # sorts by visited, then priority
     print("{} places loaded from places.csv".format(len(places)))
     menu_options = ["L", "A", "M", "Q"]
     menu_choice = get_valid_menu_choice(menu_options, "{}\n>>> ".format(MENU))
@@ -53,7 +53,7 @@ def get_places_data():
     for line in input_file:
         line = line.strip()
         parts = line.split(',')
-        parts[PRIORITY_INDEX] = int(parts[PRIORITY_INDEX])
+        parts[PRIORITY_INDEX] = int(parts[PRIORITY_INDEX])  # Turns priority from string to number
         list_of_parts.append(parts)
     input_file.close()
     return list_of_parts
@@ -84,7 +84,7 @@ def display_places_list(places):
     print_display_ending(places, visited_count)
 
 
-def get_longest_name(list_file, index):
+def get_longest_name(list_file, index):  # used for string format spacing
     """Get length of longest name."""
     longest_name = STARTING_VALUE
     for parts in list_file:
@@ -103,7 +103,8 @@ def count_visited_places(places):
 
 
 def print_display_ending(places, visited_count):
-    if visited_count < len(places):
+    """Print the ending statement for list of places display."""
+    if visited_count < len(places):  # if there are places unvisited in list
         print("{} places. You still want to visit {} places.".format(len(places), len(places) - visited_count))
     else:
         print("{} places. No places left to visit. Why not add a new place?".format(len(places)))
@@ -120,7 +121,7 @@ def get_valid_string(prompt):
 
 def get_valid_number(prompt):
     """Get a valid number."""
-    finished = False
+    finished = False  # standard while loop for including exceptions
     while not finished:
         try:
             number = int(input(prompt))
@@ -128,9 +129,9 @@ def get_valid_number(prompt):
                 print("Number must be > 0")
             else:
                 finished = True
+                return number
         except ValueError:
             print("Invalid input; enter a valid number")
-    return number
 
 
 def collect_place_details():
@@ -138,7 +139,7 @@ def collect_place_details():
     place_name = get_valid_string("Name: ")
     country_name = get_valid_string("Country: ")
     priority_value = get_valid_number("Priority: ")
-    place_details = [place_name, country_name, priority_value, UNVISITED_MARKER]
+    place_details = [place_name, country_name, priority_value, UNVISITED_MARKER]  # unvisited until marked otherwise
     print("{} in {} (priority {}) added to Travel Tracker".format(place_name, country_name, priority_value))
     return place_details
 
@@ -150,7 +151,7 @@ def mark_place_as_visited(places):
     while place_visited > len(places):
         print("Invalid place number")
         place_visited = get_valid_number(">>> ")
-    if places[place_visited - 1][VISITED_INDEX] == VISITED_MARKER:
+    if places[place_visited - 1][VISITED_INDEX] == VISITED_MARKER:  # if place already marked as visited
         print("That place is already visited")
     else:
         places[place_visited - 1][VISITED_INDEX] = VISITED_MARKER
@@ -159,7 +160,8 @@ def mark_place_as_visited(places):
 
 
 def save_to_csv_file(places):
-    out_file = open(FILENAME, 'w')
+    """Save places list to CSV file."""
+    out_file = open(FILENAME, 'w')  # writes over existing CSV file
     for place in places:
         print("{},{},{},{}".format(place[PLACE_NAME_INDEX], place[COUNTRY_INDEX], place[PRIORITY_INDEX],
                                    place[VISITED_INDEX]), file=out_file)
